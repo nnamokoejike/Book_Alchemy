@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Digital Library</title>
+    <link rel="stylesheet" href="/static/style.css">
+  </head>
+  <body>
+    <header>
+      <h1>Digital Library</h1>
+    </header>
+
+    <div class="container">
+      <!-- Search Form -->
+      <form action="/" method="GET">
+        <label for="keyword">Search:</label>
+        <input type="text" id="keyword" name="keyword" placeholder="Enter book title or author">
+        <button type="submit">Search</button>
+      </form>
+
+      <!-- Sorting Form -->
+      <form action="/" method="GET">
+        <label for="sort_by">Sort By:</label>
+        <select name="sort_by" id="sort_by">
+          <option value="title">Title</option>
+          <option value="author_name">Author Name</option>
+        </select>
+        <button type="submit">Sort</button>
+      </form>
+
+      <!-- Book Records -->
+      <div>
+        {% if books %}
+          {% for book in books %}
+          <div class="book-record">
+            <h3><a href="{{ url_for('book_detail', book_id=book.id) }}">{{ book.title }}</a></h3>
+            <p>
+              <strong>Author:</strong>
+              <a href="{{ url_for('author_detail', author_id=book.author.author_id) }}">{{ book.author.name }}</a>
+            </p>
+            <form action="{{ url_for('delete_author', author_id=book.author.author_id) }}" method="POST" style="display:inline;">
+              <button type="submit" class="delete-button">Delete Author</button>
+            </form>
+            <p><strong>Publisher:</strong> {{ book.publisher }}</p>
+            <p><strong>Publication Year:</strong> {{ book.publication_year }}</p>
+            <form action="{{ url_for('delete_book', book_id=book.id) }}" method="POST" style="margin-top: 10px;">
+              <button type="submit" class="delete-button">Delete Book</button>
+            </form>
+          </div>
+          {% endfor %}
+        {% else %}
+          <p>No books match your search criteria.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <footer>
+      <p>Digital Library &copy; 2024</p>
+    </footer>
+  </body>
+</html>
